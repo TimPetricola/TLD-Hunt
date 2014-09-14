@@ -3,23 +3,44 @@ var apiKey = 'ddad357a3c9a243f14883afcf84ecb49';
 
 _.templateSettings = { interpolate: /\{\{(.+?)\}\}/g };
 
+var LocationHash = {
+  get: function() {
+    var decodedHash = null;
+    var hash = location.hash.substring(1);
+
+    try {
+      decodedHash =  decodeURIComponent(hash);
+    } catch (e) {
+      decodedHash = hash;
+    }
+
+    return decodedHash;
+  },
+
+  set: function(value) {
+    location.hash = encodeURI(value);
+  }
+};
+
 var TLDsApp = (function() {
   var els = {
     hits: document.getElementById('hits'),
     input: document.getElementById('search-field'),
     hitTemplate: document.getElementById('hit-template'),
     noHitTemplate: document.getElementById('no-hit-template'),
+    loadingTemplate: document.getElementById('loading-template')
   };
 
   var templates = {
     hit: _.template(els.hitTemplate.innerHTML),
-    noHit: _.template(els.noHitTemplate.innerHTML)
+    noHit: _.template(els.noHitTemplate.innerHTML),
+    loading: _.template(els.loadingTemplate.innerHTML)
   }
 
   var app = {};
   var hits = [];
 
-  function loadProducts() {
+  function loadProducts(onSuccess) {
     var client = new AlgoliaSearch(appId, apiKey);
     var index = client.initIndex('Post_production');
     var params = {
@@ -36,6 +57,8 @@ var TLDsApp = (function() {
                  hit.url.indexOf('herokuapp.com') === -1 &&
                  hit.url.indexOf('play.google.com') === -1;
         });
+
+        onSuccess && onSuccess();
       }
     }, params)
   };
@@ -73,6 +96,7 @@ var TLDsApp = (function() {
 
   function handleInput() {
     var value = els.input.value;
+    LocationHash.set(value);
 
     if(value.length >= 2) {
       renderHits(hitsForTld(els.input.value));
@@ -82,7 +106,15 @@ var TLDsApp = (function() {
   };
 
   app.init = function() {
-    loadProducts();
+    var hash = LocationHash.get();
+    if(hash.length) {
+      els.input.value = hash;
+      if(hash.length >= 2) {
+        els.hits.innerHTML = templates.loading();
+      }
+    }
+
+    loadProducts(handleInput);
     els.input.addEventListener('input', handleInput, false);
   };
 
