@@ -37,7 +37,7 @@ var TLDsApp = (function() {
     noHit: _.template(els.noHitTemplate.innerHTML),
     loading: _.template(els.loadingTemplate.innerHTML),
     error: _.template(els.errorTemplate.innerHTML)
-  }
+  };
 
   var app = {};
   var loaded = false;
@@ -61,30 +61,30 @@ var TLDsApp = (function() {
                  hit.url.indexOf('play.google.com') === -1;
         });
         loaded = true;
-        onSuccess && onSuccess();
+        if (typeof onSuccess === 'function') { onSuccess(); }
       } else {
-        onError && onError();
+        if (typeof onError === 'function') { onError(); }
       }
-    }, params)
-  };
+    }, params);
+  }
 
   function urlToHost(url) {
     var a =  document.createElement('a');
     a.href = url;
     return a.hostname.replace('www.', '');
-  };
+  }
 
   function tldToRegex(tld) {
     var sanitized = tld.toLowerCase().replace(/^\./, '').replace('.', '\\.');
     return new RegExp('\\.' + sanitized + '(\\/.*)?$');
-  };
+  }
 
   function hitsForTld(tld) {
     var regex = tldToRegex(tld);
     return _.filter(hits, function(hit) {
       return regex.test(hit.url);
     });
-  };
+  }
 
   function renderHits(hits) {
     var hitsEls = _.map(hits, function(hit) {
@@ -97,7 +97,7 @@ var TLDsApp = (function() {
     } else {
       els.hits.innerHTML = templates.noHit();
     }
-  };
+  }
 
   function handleInput() {
     var value = els.input.value.toLowerCase();
@@ -113,15 +113,13 @@ var TLDsApp = (function() {
     } else {
       els.hits.innerHTML = '';
     }
-  };
+  }
 
   app.init = function() {
     var hash = LocationHash.get();
     if(hash.length) {
       els.input.value = hash;
-      if(hash.length >= 2) {
-        els.hits.innerHTML = templates.loading();
-      }
+      handleInput();
     }
 
     loadProducts(handleInput, function() {
