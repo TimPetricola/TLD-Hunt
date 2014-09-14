@@ -133,7 +133,7 @@ body {
   color: inherit;
   background-color: #36363c;
 }
-  .hit:hover {
+  a.hit:hover {
     background-color: #3d3e45;
   }
 

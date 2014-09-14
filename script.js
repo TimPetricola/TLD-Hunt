@@ -6,12 +6,18 @@ _.templateSettings = { interpolate: /\{\{(.+?)\}\}/g };
 var TLDsApp = (function() {
   var els = {
     hits: document.getElementById('hits'),
+    input: document.getElementById('search-field'),
     hitTemplate: document.getElementById('hit-template'),
-    input: document.getElementById('search-field')
+    noHitTemplate: document.getElementById('no-hit-template'),
   };
+
+  var templates = {
+    hit: _.template(els.hitTemplate.innerHTML),
+    noHit: _.template(els.noHitTemplate.innerHTML)
+  }
+
   var app = {};
   var hits = [];
-  var hitTemplate = _.template(els.hitTemplate.innerHTML);
 
   function loadProducts() {
     var client = new AlgoliaSearch(appId, apiKey);
@@ -51,10 +57,14 @@ var TLDsApp = (function() {
       var url = new URL(hit.url);
       host = url.hostname.replace('www.', '');
       hit.host = host;
-      return hitTemplate(hit);
+      return templates.hit(hit);
     });
 
-    els.hits.innerHTML = hitsEls.join('');
+    if(hitsEls.length) {
+      els.hits.innerHTML = hitsEls.join('');
+    } else {
+      els.hits.innerHTML = templates.noHit();
+    }
   };
 
   app.init = function() {
