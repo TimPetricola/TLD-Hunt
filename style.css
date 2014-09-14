@@ -52,6 +52,10 @@ table {
        box-sizing: border-box;
 }
 
+abbr[title] {
+  border-bottom: 1px dotted;
+}
+
 body {
   background-color: #292a2f;
   color: #fff;
