@@ -94,6 +94,21 @@ body {
   color: #6a6c75;
 }
 
+.about {
+  margin-bottom: 2em;
+  padding: 1em;
+  background-color: #36363c;
+  line-height: 1.4;
+  color: #aaacb5;
+}
+  .about a {
+    text-decoration: none;
+    color: #fff;
+  }
+  .about a:hover {
+    color: #259ec6;
+  }
+
 .search-field {
   width: 100%;
   display: block;
@@ -105,6 +120,10 @@ body {
   outline: none;
   margin: 0;
   color: #313133;
+}
+
+.hits {
+  margin-bottom: 2em;
 }
 
 .hit {
