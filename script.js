@@ -40,6 +40,12 @@ var TLDsApp = (function() {
     }, params)
   };
 
+  function urlToHost(url) {
+    var a =  document.createElement('a');
+    a.href = url;
+    return a.hostname.replace('www.', '');
+  };
+
   function tldToRegex(tld) {
     var sanitized = tld.toLowerCase().replace(/^\./, '').replace('.', '\\.');
     return new RegExp('\\.' + sanitized + '(\\/.*)?$');
@@ -54,9 +60,7 @@ var TLDsApp = (function() {
 
   function renderHits(hits) {
     var hitsEls = _.map(hits, function(hit) {
-      var url = new URL(hit.url);
-      host = url.hostname.replace('www.', '');
-      hit.host = host;
+      hit.host = urlToHost(hit.url);
       return templates.hit(hit);
     });
 
