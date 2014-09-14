@@ -99,7 +99,8 @@ var TLDsApp = (function() {
   };
 
   function handleInput() {
-    var value = els.input.value;
+    var value = els.input.value.toLowerCase();
+    els.input.value = value;
     LocationHash.set(value);
 
     if(value.length >= 2) {
