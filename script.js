@@ -72,7 +72,13 @@ var TLDsApp = (function() {
   };
 
   function handleInput() {
-    renderHits(hitsForTld(els.input.value));
+    var value = els.input.value;
+
+    if(value.length >= 2) {
+      renderHits(hitsForTld(els.input.value));
+    } else {
+      els.hits.innerHTML = '';
+    }
   };
 
   app.init = function() {
