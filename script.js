@@ -40,6 +40,7 @@ var TLDsApp = (function() {
   }
 
   var app = {};
+  var loaded = false;
   var hits = [];
 
   function loadProducts(onSuccess, onError) {
@@ -59,7 +60,7 @@ var TLDsApp = (function() {
                  hit.url.indexOf('herokuapp.com') === -1 &&
                  hit.url.indexOf('play.google.com') === -1;
         });
-
+        loaded = true;
         onSuccess && onSuccess();
       } else {
         onError && onError();
@@ -104,7 +105,11 @@ var TLDsApp = (function() {
     LocationHash.set(value);
 
     if(value.length >= 2) {
-      renderHits(hitsForTld(els.input.value));
+      if(loaded) {
+        renderHits(hitsForTld(els.input.value));
+      } else {
+        els.hits.innerHTML = templates.loading();
+      }
     } else {
       els.hits.innerHTML = '';
     }
