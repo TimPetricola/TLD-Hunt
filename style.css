@@ -1,0 +1,134 @@
+/* http://meyerweb.com/eric/tools/css/reset/
+   v2.0 | 20110126
+   License: none (public domain)
+*/
+
+html, body, div, span, applet, object, iframe,
+h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+a, abbr, acronym, address, big, cite, code,
+del, dfn, em, img, ins, kbd, q, s, samp,
+small, strike, strong, sub, sup, tt, var,
+b, u, i, center,
+dl, dt, dd, ol, ul, li,
+fieldset, form, label, legend,
+table, caption, tbody, tfoot, thead, tr, th, td,
+article, aside, canvas, details, embed,
+figure, figcaption, footer, header, hgroup,
+menu, nav, output, ruby, section, summary,
+time, mark, audio, video {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  font-size: 100%;
+  font: inherit;
+  vertical-align: baseline;
+}
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure,
+footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+body {
+  line-height: 1;
+}
+ol, ul {
+  list-style: none;
+}
+blockquote, q {
+  quotes: none;
+}
+blockquote:before, blockquote:after,
+q:before, q:after {
+  content: '';
+  content: none;
+}
+table {
+  border-collapse: collapse;
+  border-spacing: 0;
+}
+
+*, *:before, *:after {
+  -moz-box-sizing: border-box;
+       box-sizing: border-box;
+}
+
+body {
+  background-color: #292a2f;
+  color: #fff;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  width: 400px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.header {
+  margin: 2em 1em;
+}
+
+.logo {
+  border-radius: 50%;
+  background-color: #259ec6;
+  width: 2em;
+  height: 2em;
+  position: relative;
+  float: left;
+  margin-right: 1em;
+}
+  .logo:before {
+    content: ".?";
+    text-align: center;
+    line-height: 2em;
+    width: 100%;
+    display: block;
+    font-weight: bold;
+    -webkit-font-smoothing: antialiased;
+  }
+
+.brand {
+  font-weight: 500;
+  font-size: 1.5em;
+  margin-bottom: 0.2em;
+}
+
+.baseline {
+  color: #6a6c75;
+}
+
+.search-field {
+  width: 100%;
+  display: block;
+  border-radius: 0;
+  padding: 0.5em 1em 0.5em 0.7em;
+  border: none;
+  font-size: 2em;
+  font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+  outline: none;
+  margin: 0;
+  color: #313133;
+}
+
+.hit {
+  display: block;
+  padding: 1em;
+  text-decoration: none;
+  color: inherit;
+  background-color: #36363c;
+}
+  .hit:hover {
+    background-color: #3d3e45;
+  }
+
+  .hit-truncate {
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .hit-name {
+    margin-bottom: .5em;
+  }
+
+  .hit-host {
+    color: #6a6c75;
+  }

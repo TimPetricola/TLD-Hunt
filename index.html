@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+  <meta charset='utf-8'>
+  <meta name='viewport' content='width=device-width, minimum-scale=1.0'>
+  <title>TLDs</title>
+  <link href='./style.css' type='text/css' rel='stylesheet'>
+</head>
+<body>
+  <header class='header'>
+    <div class='logo'></div>
+    <h1 class='brand'>Products TLDs</h1>
+    <small class='baseline'>Search product by their TLD.</small>
+  </header>
+
+  <input class='search-field' id='search-field' placeholder='.com, .io, ...' type='text' />
+  <ul class='hits' id='hits'></ul>
+
+  <script type='text/template' id='hit-template'>
+    <li>
+      <a class='hit' href='{{url}}' target='_blank'>
+        <h4 class='hit-name hit-truncate'>{{name}}</h4>
+        <small class='hit-host hit-truncate'>{{host}}</small>
+      </a>
+    </li>
+  </script>
+
+
+  <script src='//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.6.0/underscore-min.js'></script>
+  <script src='//cdn.jsdelivr.net/algoliasearch/2.6.0/algoliasearch.min.js'></script>
+  <script src='./script.js'></script>
+</body>
+</html>
