@@ -28,19 +28,21 @@ var TLDsApp = (function() {
     input: document.getElementById('search-field'),
     hitTemplate: document.getElementById('hit-template'),
     noHitTemplate: document.getElementById('no-hit-template'),
-    loadingTemplate: document.getElementById('loading-template')
+    loadingTemplate: document.getElementById('loading-template'),
+    errorTemplate: document.getElementById('error-template')
   };
 
   var templates = {
     hit: _.template(els.hitTemplate.innerHTML),
     noHit: _.template(els.noHitTemplate.innerHTML),
-    loading: _.template(els.loadingTemplate.innerHTML)
+    loading: _.template(els.loadingTemplate.innerHTML),
+    error: _.template(els.errorTemplate.innerHTML)
   }
 
   var app = {};
   var hits = [];
 
-  function loadProducts(onSuccess) {
+  function loadProducts(onSuccess, onError) {
     var client = new AlgoliaSearch(appId, apiKey);
     var index = client.initIndex('Post_production');
     var params = {
@@ -50,7 +52,7 @@ var TLDsApp = (function() {
     };
 
     index.search('', function(success, result) {
-      if(success) {
+      if(success && !result.message) {
         hits = _.filter(result.hits, function(hit) {
           return hit.url.indexOf('bit.ly') === -1 &&
                  hit.url.indexOf('itunes.apple.com') === -1 &&
@@ -59,6 +61,8 @@ var TLDsApp = (function() {
         });
 
         onSuccess && onSuccess();
+      } else {
+        onError && onError();
       }
     }, params)
   };
@@ -114,7 +118,9 @@ var TLDsApp = (function() {
       }
     }
 
-    loadProducts(handleInput);
+    loadProducts(handleInput, function() {
+      els.hits.innerHTML = templates.error();
+    });
     els.input.addEventListener('input', handleInput, false);
   };
 
