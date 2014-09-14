@@ -41,7 +41,7 @@ var TLDsApp = (function() {
   };
 
   function tldToRegex(tld) {
-    var sanitized = tld.replace(/^\./, '').replace('.', '\\.');
+    var sanitized = tld.toLowerCase().replace(/^\./, '').replace('.', '\\.');
     return new RegExp('\\.' + sanitized + '(\\/.*)?$');
   };
 
