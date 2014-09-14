@@ -58,6 +58,8 @@ var TLDsApp = (function() {
           return hit.url.indexOf('bit.ly') === -1 &&
                  hit.url.indexOf('itunes.apple.com') === -1 &&
                  hit.url.indexOf('herokuapp.com') === -1 &&
+                 hit.url.indexOf('github.io') === -1 &&
+                 hit.url.indexOf('chrome.google.com/webstore') === -1 &&
                  hit.url.indexOf('play.google.com') === -1;
         });
         loaded = true;
