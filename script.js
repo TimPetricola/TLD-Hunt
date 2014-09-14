@@ -52,8 +52,8 @@ var TLDsApp = (function() {
     });
   };
 
-  function handleInput() {
-    var hitsEls = _.map(hitsForTld(els.input.value), function(hit) {
+  function renderHits(hits) {
+    var hitsEls = _.map(hits, function(hit) {
       var url = new URL(hit.url);
       host = url.hostname.replace('www.', '');
       hit.host = host;
@@ -65,6 +65,10 @@ var TLDsApp = (function() {
     } else {
       els.hits.innerHTML = templates.noHit();
     }
+  };
+
+  function handleInput() {
+    renderHits(hitsForTld(els.input.value));
   };
 
   app.init = function() {
