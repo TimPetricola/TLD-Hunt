@@ -117,17 +117,23 @@ var TLDsApp = (function() {
     }
   }
 
-  app.init = function() {
+  function handleHash() {
     var hash = LocationHash.get();
-    if(hash.length) {
+    if(hash.length && hash !== els.input.value) {
       els.input.value = hash;
       handleInput();
     }
+  }
+
+  app.init = function() {
+    handleHash();
 
     loadProducts(handleInput, function() {
       els.hits.innerHTML = templates.error();
     });
+
     els.input.addEventListener('input', handleInput, false);
+    window.addEventListener('hashchange', handleHash, false);
   };
 
   return app;
