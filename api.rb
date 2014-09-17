@@ -105,15 +105,18 @@ end
 get '/tld/:tld' do
   content_type :json
 
+  limit = 100
+  skip = (params[:offset] || 0).to_i
+
   tld = sanitize_tld(params[:tld])
   products = Product.with_tld(tld)
 
   response = {
     tld: tld,
-    total_count: products.length
+    total_count: products.count
   }
 
-  response[:products] = products.map do |product|
+  response[:products] = products.limit(limit).skip(skip).map do |product|
     {
       name: product.name,
       url: product.url,
