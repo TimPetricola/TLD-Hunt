@@ -102,6 +102,8 @@ def sanitize_tld(tld)
   tld.to_s.downcase.gsub(/\.\.+/, '.').gsub(/^\./, '').gsub(/[^a-z\.]/, '')
 end
 
+set :static_cache_control, [:public, max_age: 31536000] # 1 year
+
 get '/tld/:tld' do
   content_type :json
   cache_control :public, max_age: 86400 # 24 hours
