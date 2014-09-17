@@ -101,6 +101,7 @@ var TLDsApp = (function() {
     if(value.length >= 2) {
       els.hits.innerHTML = templates.loading();
       loadProducts(els.input.value, 0, function(response) {
+        _gaq.push(['_trackEvent', 'TLDs', 'Search', response.tld]);
         renderHits(response.products, response.total_count);
       }, function() {
         els.hits.innerHTML = templates.error();
