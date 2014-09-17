@@ -104,6 +104,7 @@ end
 
 get '/tld/:tld' do
   content_type :json
+  cache_control :public, max_age: 86400 # 24 hours
 
   limit = 100
   skip = (params[:offset] || 0).to_i
