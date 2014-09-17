@@ -33,4 +33,21 @@ class ProductsTest < Test::Unit::TestCase
     assert_hostname 'example.com', 'http://www.example.com'
     assert_hostname 'example.com', 'http://www.example.com/foobar'
   end
+
+  def test_with_tld
+    products = Product.create([
+      { name: 'Foobar', url: 'http://example.com' },
+      { name: 'Foobar', url: 'http://example.com/' },
+      { name: 'Foobar', url: 'http://example.com/foo' },
+      { name: 'Foobar', url: 'http://example.co' },
+      { name: 'Foobar', url: 'http://example.co/foo' },
+      { name: 'Foobar', url: 'http://example.co.uk' },
+    ])
+
+    assert_equal 3, Product.with_tld('com').size
+    assert_equal 2, Product.with_tld('co').size
+    assert_equal 1, Product.with_tld('co.uk').size
+
+    products.each(&:destroy)
+  end
 end

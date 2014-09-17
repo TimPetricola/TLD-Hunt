@@ -4,6 +4,16 @@ development:
       database: tld-hunt
       hosts:
         - localhost:27017
+test:
+  sessions:
+    default:
+      database: tld-hunt-test
+      hosts:
+        - localhost:27017
+      options:
+        read: primary
+        max_retries: 1
+        retry_interval: 0
 production:
   sessions:
     default:
