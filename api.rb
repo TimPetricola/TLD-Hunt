@@ -1,6 +1,7 @@
 require 'sinatra'
 require 'json'
 require 'mongoid'
+require 'uri'
 
 Mongoid.load!('mongoid.yml')
 
@@ -15,6 +16,10 @@ class Product
 
   validates :name, presence: true
   validates :url, presence: true
+
+  def hostname
+    URI.parse(url).host.gsub('www.', '')
+  end
 
   def self.with_tld(tld)
     tld = sanitize_tld(tld).gsub('.', '\\.')
@@ -40,7 +45,8 @@ get '/tld/:tld' do
   response[:products] = products.map do |product|
     {
       name: product.name,
-      url: product.url
+      url: product.url,
+      hostname: product.hostname
     }
   end
 

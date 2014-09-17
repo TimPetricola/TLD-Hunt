@@ -21,3 +21,16 @@ class SanitizeTests < Test::Unit::TestCase
     assert_equal 'com', sanitize_tld('COM')
   end
 end
+
+
+class ProductsTest < Test::Unit::TestCase
+  def assert_hostname(output, input)
+    assert_equal output, Product.new(url: input).hostname
+  end
+
+  def test_hostname
+    assert_hostname 'example.com', 'http://example.com'
+    assert_hostname 'example.com', 'http://www.example.com'
+    assert_hostname 'example.com', 'http://www.example.com/foobar'
+  end
+end
