@@ -31,13 +31,19 @@ get '/tld/:tld' do
 
   tld = sanitize_tld(params[:tld])
   products = Product.with_tld(tld)
-  response = { tld: tld }
-  response[:products] =products.map do |product|
+
+  response = {
+    tld: tld,
+    total_count: products.length
+  }
+
+  response[:products] = products.map do |product|
     {
       name: product.name,
       url: product.url
     }
   end
+
   response.to_json
 end
 
