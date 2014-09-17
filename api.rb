@@ -2,6 +2,7 @@ require 'sinatra'
 require 'json'
 require 'mongoid'
 require 'uri'
+require 'rest_client'
 
 Mongoid.load!('mongoid.yml')
 
@@ -46,6 +47,55 @@ class Product
     end
   end
 end
+
+class Fetcher
+  ENDPOINT = 'https://api.producthunt.com/v1/posts'
+
+  attr_reader :products
+
+  def initialize(date = DateTime.now)
+    @date = date
+    @results = false
+  end
+
+  def fetch
+    products_from_response(api_call)
+  end
+
+  def results?
+    @results
+  end
+
+  private
+
+  def api_call
+    params = {
+      access_token: ENV['PRODUCT_HUNT_ACCESS_TOKEN'],
+      day: @date.strftime('%Y-%m-%d')
+    }
+    RestClient::Resource.new(ENDPOINT, verify_ssl: false).get(params: params)
+  end
+
+  def products_from_response(response)
+    raw = JSON.parse(response.body)['posts']
+    @results = raw.length > 0
+
+    @products = raw.map do |detail|
+     Product.create(
+        name: detail['name'],
+        url: url_from_detail(detail),
+        tagline: detail['tagline'],
+        product_hunt_id: detail['id'],
+        product_hunt_url: detail['discussion_url']
+      )
+    end
+    @products = products.select(&:persisted?)
+  end
+
+  def url_from_detail(detail)
+    screenshot_params = URI.parse(detail['screenshot_url'].values.last).query
+    URI::decode_www_form(screenshot_params).to_h['url']
+  end
 end
 
 def sanitize_tld(tld)
