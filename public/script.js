@@ -26,14 +26,16 @@ var TLDsApp = (function() {
     hitTemplate: document.getElementById('hit-template'),
     noHitTemplate: document.getElementById('no-hit-template'),
     loadingTemplate: document.getElementById('loading-template'),
-    errorTemplate: document.getElementById('error-template')
+    errorTemplate: document.getElementById('error-template'),
+    countTemplate: document.getElementById('count-template')
   };
 
   var templates = {
     hit: _.template(els.hitTemplate.innerHTML),
     noHit: _.template(els.noHitTemplate.innerHTML),
     loading: _.template(els.loadingTemplate.innerHTML),
-    error: _.template(els.errorTemplate.innerHTML)
+    error: _.template(els.errorTemplate.innerHTML),
+    count: _.template(els.countTemplate.innerHTML)
   };
 
   var app = {};
@@ -61,13 +63,17 @@ var TLDsApp = (function() {
     xhr.send();
   }
 
-  function renderHits(hits) {
+  function renderHits(hits, totalCount) {
     var hitsEls = _.map(hits, function(hit) {
       return templates.hit(hit);
     });
 
     if(hitsEls.length) {
-      els.hits.innerHTML = hitsEls.join('');
+      var count = templates.count({
+        count: hits.length,
+        totalCount: totalCount
+      });
+      els.hits.innerHTML = [count].concat(hitsEls).join('');
     } else {
       els.hits.innerHTML = templates.noHit();
     }
@@ -81,7 +87,7 @@ var TLDsApp = (function() {
     if(value.length >= 2) {
       els.hits.innerHTML = templates.loading();
       loadProducts(els.input.value, 0, function(response) {
-        renderHits(response.products);
+        renderHits(response.products, response.total_count);
       }, function() {
         els.hits.innerHTML = templates.error();
       });

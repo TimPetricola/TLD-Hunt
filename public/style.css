@@ -156,6 +156,10 @@ body {
     color: #6a6c75;
   }
 
+  .hit-muted {
+    color: #6a6c75;
+  }
+
 .hit-loader {
   text-align: center;
   color: #fff;
