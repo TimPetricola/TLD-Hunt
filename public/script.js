@@ -1,6 +1,3 @@
-var appId = '0H4SMABBSG';
-var apiKey = 'ddad357a3c9a243f14883afcf84ecb49';
-
 _.templateSettings = { interpolate: /\{\{(.+?)\}\}/g };
 
 var LocationHash = {
@@ -40,57 +37,32 @@ var TLDsApp = (function() {
   };
 
   var app = {};
-  var loaded = false;
-  var hits = [];
 
-  function loadProducts(onSuccess, onError) {
-    var client = new AlgoliaSearch(appId, apiKey);
-    var index = client.initIndex('Post_production');
-    var params = {
-      hitsPerPage: 1000,
-      attributesToRetrieve: 'name,url',
-      attributesToHighlight: 'none'
-    };
+  function loadProducts(tld, offset, onSuccess, onError) {
+    var url = '/tld/' + tld + '?offset=' + offset;
 
-    index.search('', function(success, result) {
-      if(success && !result.message) {
-        hits = _.filter(result.hits, function(hit) {
-          return hit.url.indexOf('bit.ly') === -1 &&
-                 hit.url.indexOf('itunes.apple.com') === -1 &&
-                 hit.url.indexOf('herokuapp.com') === -1 &&
-                 hit.url.indexOf('github.io') === -1 &&
-                 hit.url.indexOf('chrome.google.com/webstore') === -1 &&
-                 hit.url.indexOf('play.google.com') === -1;
-        });
-        loaded = true;
-        if (typeof onSuccess === 'function') { onSuccess(); }
+    var xhr = new XMLHttpRequest();
+    xhr.open('GET', url, true);
+    xhr.onload = function() {
+      if (xhr.status >= 200 && xhr.status < 400){
+        var response = xhr.responseText;
+        if (typeof onSuccess === 'function') {
+          onSuccess(JSON.parse(response));
+        }
       } else {
         if (typeof onError === 'function') { onError(); }
       }
-    }, params);
-  }
+    };
 
-  function urlToHost(url) {
-    var a =  document.createElement('a');
-    a.href = url;
-    return a.hostname.replace('www.', '');
-  }
+    xhr.onerror = function() {
+      if (typeof onError === 'function') { onError(); }
+    };
 
-  function tldToRegex(tld) {
-    var sanitized = tld.toLowerCase().replace(/^\./, '').replace('.', '\\.');
-    return new RegExp('\\.' + sanitized + '(\\/.*)?$');
-  }
-
-  function hitsForTld(tld) {
-    var regex = tldToRegex(tld);
-    return _.filter(hits, function(hit) {
-      return regex.test(hit.url);
-    });
+    xhr.send();
   }
 
   function renderHits(hits) {
     var hitsEls = _.map(hits, function(hit) {
-      hit.host = urlToHost(hit.url);
       return templates.hit(hit);
     });
 
@@ -107,11 +79,12 @@ var TLDsApp = (function() {
     LocationHash.set(value);
 
     if(value.length >= 2) {
-      if(loaded) {
-        renderHits(hitsForTld(els.input.value));
-      } else {
-        els.hits.innerHTML = templates.loading();
-      }
+      els.hits.innerHTML = templates.loading();
+      loadProducts(els.input.value, 0, function(response) {
+        renderHits(response.products);
+      }, function() {
+        els.hits.innerHTML = templates.error();
+      });
     } else {
       els.hits.innerHTML = '';
     }
@@ -127,10 +100,6 @@ var TLDsApp = (function() {
 
   app.init = function() {
     handleHash();
-
-    loadProducts(handleInput, function() {
-      els.hits.innerHTML = templates.error();
-    });
 
     els.input.addEventListener('input', handleInput, false);
     window.addEventListener('hashchange', handleHash, false);
