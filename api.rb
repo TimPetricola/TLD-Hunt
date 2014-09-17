@@ -35,7 +35,7 @@ class Product
 
   def self.with_tld(tld)
     tld = sanitize_tld(tld).gsub('.', '\\.')
-    where(url: Regexp.new("\.#{tld}(\/.*)?$"))
+    where(url: Regexp.new("\\.#{tld}(\\/.*)?$"))
   end
 
   private
