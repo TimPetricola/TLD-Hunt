@@ -101,7 +101,7 @@ var TLDsApp = (function() {
   app.init = function() {
     handleHash();
 
-    els.input.addEventListener('input', handleInput, false);
+    els.input.addEventListener('input', _.debounce(handleInput, 300), false);
     window.addEventListener('hashchange', handleHash, false);
   };
 
