@@ -40,6 +40,7 @@ var TLDsApp = (function() {
 
   var app = {};
   var currentXhr = null;
+  var pageTitle = document.title;
 
   function loadProducts(tld, offset, onSuccess, onError) {
     var url = '/tld/' + tld + '?offset=' + offset;
@@ -90,6 +91,12 @@ var TLDsApp = (function() {
     var value = els.input.value.toLowerCase();
     els.input.value = value;
     LocationHash.set(value);
+
+    var title = pageTitle;
+    if(value.length) {
+      title += ' - ' + value;
+    }
+    document.title = title;
 
     if(value.length >= 2) {
       els.hits.innerHTML = templates.loading();
