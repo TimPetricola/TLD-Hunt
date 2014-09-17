@@ -1,0 +1,13 @@
+development:
+  sessions:
+    default:
+      database: tld-hunt
+      hosts:
+        - localhost:27017
+production:
+  sessions:
+    default:
+      uri: <%= ENV['MONGOHQ_URL'] %>
+      options:
+        max_retries: 20
+        pool_size: 25
