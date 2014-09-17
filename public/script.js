@@ -39,11 +39,18 @@ var TLDsApp = (function() {
   };
 
   var app = {};
+  var currentXhr = null;
 
   function loadProducts(tld, offset, onSuccess, onError) {
     var url = '/tld/' + tld + '?offset=' + offset;
 
+    if(currentXhr) {
+      currentXhr.abort();
+      currentXhr = null;
+    }
+
     var xhr = new XMLHttpRequest();
+    currentXhr = xhr;
     xhr.open('GET', url, true);
     xhr.onload = function() {
       if (xhr.status >= 200 && xhr.status < 400){
