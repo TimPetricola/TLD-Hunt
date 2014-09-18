@@ -30,3 +30,9 @@ namespace :fetch do
     end
   end
 end
+
+desc 'Pings PING_URL to keep a dyno alive'
+task :ping do
+  url = ENV['PING_URL']
+  RestClient.get(url).body if url
+end
